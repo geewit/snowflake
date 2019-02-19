@@ -1,0 +1,1 @@
+apply from: "https://raw.githubusercontent.com/geewit/gradle_publish_sonatype/master/publish.gradle"
