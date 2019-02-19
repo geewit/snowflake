@@ -55,9 +55,7 @@ public class SnowFlake {
     }
 
     /**
-     * 产生下一个ID
-     *
-     * @return
+     * @return 产生下一个ID
      */
     public synchronized long nextId() {
         long currStmp = getNewstmp();
