@@ -11,7 +11,7 @@ public class SnowFlake {
     /**
      * 起始的时间戳
      */
-    private final static long START_STMP = System.currentTimeMillis() - 86400000;
+    private final static long START_STMP = 1288834974657L;
 
     /**
      * 每一部分占用的位数
