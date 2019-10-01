@@ -1,5 +1,7 @@
 package io.geewit.snowflake;
 
+import java.util.Random;
+
 /**
  * twitter的snowflake算法 -- java实现
  *
@@ -44,7 +46,8 @@ public class SnowFlake {
             throw new IllegalArgumentException("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
         }
         if (machineId > MAX_MACHINE_NUM || machineId < 0) {
-            throw new IllegalArgumentException("machineId can't be greater than MAX_MACHINE_NUM or less than 0");
+            Random random = new Random();
+            machineId = random.nextInt(98);
         }
         this.datacenterId = datacenterId;
         this.machineId = machineId;
