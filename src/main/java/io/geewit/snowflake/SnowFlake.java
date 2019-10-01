@@ -46,8 +46,12 @@ public class SnowFlake {
             throw new IllegalArgumentException("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
         }
         if (machineId > MAX_MACHINE_NUM || machineId < 0) {
-            Random random = new Random();
-            machineId = random.nextInt(98);
+            if(machineId > MAX_MACHINE_NUM) {
+                machineId /= 3;
+            } else {
+                Random random = new Random();
+                machineId = random.nextInt(98);
+            }
         }
         this.datacenterId = datacenterId;
         this.machineId = machineId;
