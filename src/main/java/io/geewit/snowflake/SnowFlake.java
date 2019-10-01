@@ -43,14 +43,19 @@ public class SnowFlake {
 
     private SnowFlake(long datacenterId, long machineId) {
         if (datacenterId > MAX_DATACENTER_NUM || datacenterId < 0) {
-            throw new IllegalArgumentException("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
+            if(datacenterId > MAX_DATACENTER_NUM) {
+                datacenterId /= 3;
+            } else {
+                Random random = new Random();
+                datacenterId = random.nextInt(30) + 1;
+            }
         }
         if (machineId > MAX_MACHINE_NUM || machineId < 0) {
             if(machineId > MAX_MACHINE_NUM) {
                 machineId /= 3;
             } else {
                 Random random = new Random();
-                machineId = random.nextInt(98);
+                machineId = random.nextInt(98) + 1;
             }
         }
         this.datacenterId = datacenterId;
