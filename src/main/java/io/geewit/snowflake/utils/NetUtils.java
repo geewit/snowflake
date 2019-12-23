@@ -10,7 +10,7 @@ import java.util.Enumeration;
  *
  * @author geewit
  */
-public abstract class NetUtils {
+public class NetUtils {
 
     /**
      * Pre-loaded local address
