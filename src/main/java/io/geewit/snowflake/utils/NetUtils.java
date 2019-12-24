@@ -1,6 +1,5 @@
 package io.geewit.snowflake.utils;
 
-import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
@@ -11,18 +10,11 @@ import java.util.Enumeration;
  * @author geewit
  */
 public class NetUtils {
-
-    /**
-     * Pre-loaded local address
-     */
-    public static InetAddress localAddress;
-
     public static NetworkInterface network;
 
     static {
         try {
             network = getNetwork();
-            localAddress = getLocalInetAddress(network);
         } catch (SocketException e) {
             throw new RuntimeException("fail to get local ip.");
         }
@@ -41,40 +33,14 @@ public class NetUtils {
             return network;
         }
 
-        throw new RuntimeException("No validated local address!");
+        throw new RuntimeException("No validated local network!");
     }
 
     /**
-     * Retrieve the first validated local ip address(the Public and LAN ip addresses are validated).
+     * Retrieve local mac
      *
-     * @return the local address
-     * @throws SocketException the socket exception
+     * @return the string local mac
      */
-    public static InetAddress getLocalInetAddress(NetworkInterface network) throws SocketException {
-        Enumeration<InetAddress> addressEnumeration = network.getInetAddresses();
-        while (addressEnumeration.hasMoreElements()) {
-            InetAddress address = addressEnumeration.nextElement();
-
-            // ignores all invalidated addresses
-            if (address.isLinkLocalAddress() || address.isLoopbackAddress() || address.isAnyLocalAddress()) {
-                continue;
-            }
-
-            return address;
-        }
-
-        throw new RuntimeException("No validated local address!");
-    }
-
-    /**
-     * Retrieve local address
-     *
-     * @return the string local address
-     */
-    public static String getLocalAddress() {
-        return localAddress.getHostAddress();
-    }
-
     public static byte[] getMac() throws SocketException {
         return network.getHardwareAddress();
     }
@@ -87,7 +53,6 @@ public class NetUtils {
                 | (0xff000000L & ((long) mac_bytes[3] << (8 * 3)))
                 | (0xff00000000L & ((long) mac_bytes[4] << (8 * 4)))
                 | (0xff0000000000L & ((long) mac_bytes[5] << (8 * 5)))
-                | (0xff000000000000L & ((long) mac_bytes[6] << (8 * 6)))
-                | (0xff00000000000000L & ((long) mac_bytes[7] << (8 * 7)));
+                | (0xff000000000000L & ((long) mac_bytes[6] << (8 * 6)));
     }
 }
