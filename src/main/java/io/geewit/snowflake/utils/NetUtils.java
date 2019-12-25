@@ -52,7 +52,6 @@ public class NetUtils {
                 | (0xff0000L & ((long) mac_bytes[2] << (8 * 2)))
                 | (0xff000000L & ((long) mac_bytes[3] << (8 * 3)))
                 | (0xff00000000L & ((long) mac_bytes[4] << (8 * 4)))
-                | (0xff0000000000L & ((long) mac_bytes[5] << (8 * 5)))
-                | (0xff000000000000L & ((long) mac_bytes[6] << (8 * 6)));
+                | (0xff0000000000L & ((long) mac_bytes[5] << (8 * 5)));
     }
 }
