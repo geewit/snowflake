@@ -1,5 +1,7 @@
 package io.geewit.snowflake.utils;
 
+import org.apache.commons.lang3.RandomUtils;
+
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
@@ -47,6 +49,9 @@ public class NetUtils {
 
     public static long getLongMac() throws SocketException {
         byte[] mac_bytes = getMac();
+        if(mac_bytes == null) {
+            return RandomUtils.nextLong();
+        }
         return (0xffL & (long) mac_bytes[0])
                 | (0xff00L & ((long) mac_bytes[1] << 8))
                 | (0xff0000L & ((long) mac_bytes[2] << (8 * 2)))
