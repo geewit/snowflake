@@ -77,7 +77,7 @@ public class DefaultUidGenerator implements UidGenerator {
 
         this.workerId = workerId;
         if (this.workerId > bitsAllocator.getMaxWorkerId()) {
-            throw new RuntimeException("Worker id " + this.workerId + " exceeds the max " + this.bitsAllocator.getMaxWorkerId());
+            this.workerId = this.workerId & bitsAllocator.getMaxWorkerId();
         }
 
         logger.info("Initialized bits(1, {}, {}, {}) for workerID:{}", this.timeBits, this.workerBits, this.seqBits, this.workerId);
