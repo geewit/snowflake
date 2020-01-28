@@ -1,7 +1,7 @@
 package io.geewit.snowflake.worker;
 
 
-import io.geewit.core.utils.lang.enums.Value;
+import io.geewit.core.utils.enums.Value;
 
 /**
  * WorkerNodeType
