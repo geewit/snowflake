@@ -14,7 +14,7 @@ public interface BufferedUidProvider {
      * Provides UID in one second
      *
      * @param momentInSecond
-     * @return
+     * @return UID in one second
      */
     List<Long> provide(long momentInSecond);
 }

@@ -12,7 +12,7 @@ public interface RejectedTakeBufferHandler {
     /**
      * Reject take buffer request
      *
-     * @param ringBuffer
+     * @param ringBuffer RingBuffer
      */
     void rejectTakeBuffer(RingBuffer ringBuffer);
 }

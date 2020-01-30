@@ -78,7 +78,7 @@ public class CachedUidGenerator extends DefaultUidGenerator {
     /**
      * Get the UIDs in the same specified second under the max sequence
      *
-     * @param currentSecond
+     * @param currentSecond currentSecond
      * @return UID list, size of {@link io.geewit.snowflake.BitsAllocator#getMaxSequence()} + 1
      */
     protected List<Long> nextIdsForOneSecond(long currentSecond) {

@@ -73,7 +73,7 @@ public class BufferPaddingExecutor {
      *
      * @param ringBuffer    {@link RingBuffer}
      * @param uidProvider   {@link BufferedUidProvider}
-     * @param usingSchedule
+     * @param usingSchedule usingSchedule
      */
     public BufferPaddingExecutor(RingBuffer ringBuffer, BufferedUidProvider uidProvider, boolean usingSchedule) {
         this.running = new AtomicBoolean(false);
@@ -118,7 +118,7 @@ public class BufferPaddingExecutor {
     /**
      * Whether is padding
      *
-     * @return
+     * @return isRunning
      */
     public boolean isRunning() {
         return running.get();

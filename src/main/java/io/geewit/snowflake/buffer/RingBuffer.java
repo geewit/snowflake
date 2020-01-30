@@ -100,7 +100,7 @@ public class RingBuffer {
      * <b>Note that: </b> It is recommended to put UID in a serialize way, cause we once batch generate a series UIDs and put
      * the one by one into the buffer, so it is unnecessary put in multi-threads
      *
-     * @param uid
+     * @param uid uid
      * @return false means that the buffer is full, apply {@link RejectedPutBufferHandler}
      */
     public synchronized boolean put(long uid) {
