@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.IntStream;
 
 /**
  * Represents a ring buffer based on array.<br>
@@ -204,12 +205,8 @@ public class RingBuffer {
      * Initialize flags as CAN_PUT_FLAG
      */
     private PaddedAtomicLong[] initFlags(int bufferSize) {
-        PaddedAtomicLong[] flags = new PaddedAtomicLong[bufferSize];
-        for (int i = 0; i < bufferSize; i++) {
-            flags[i] = new PaddedAtomicLong(CAN_PUT_FLAG);
-        }
 
-        return flags;
+        return IntStream.range(0, bufferSize).mapToObj(i -> new PaddedAtomicLong(CAN_PUT_FLAG)).toArray(PaddedAtomicLong[]::new);
     }
 
     /**
@@ -244,13 +241,10 @@ public class RingBuffer {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("RingBuffer [bufferSize=").append(bufferSize)
-                .append(", tail=").append(tail)
-                .append(", cursor=").append(cursor)
-                .append(", paddingThreshold=").append(paddingThreshold).append("]");
-
-        return builder.toString();
+        return "RingBuffer [bufferSize=" + bufferSize +
+                ", tail=" + tail +
+                ", cursor=" + cursor +
+                ", paddingThreshold=" + paddingThreshold + "]";
     }
 
 }

@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Represents a cached implementation of {@link io.geewit.snowflake.UidGenerator} extends
@@ -84,13 +86,9 @@ public class CachedUidGenerator extends DefaultUidGenerator {
     protected List<Long> nextIdsForOneSecond(long currentSecond) {
         // Initialize result list size of (max sequence + 1)
         int listSize = (int) bitsAllocator.getMaxSequence() + 1;
-        List<Long> uidList = new ArrayList<>(listSize);
-
         // Allocate the first sequence of the second, the others can be calculated with the offset
         long firstSeqUid = bitsAllocator.allocate(currentSecond - epochSeconds, workerId, 0L);
-        for (int offset = 0; offset < listSize; offset++) {
-            uidList.add(firstSeqUid + offset);
-        }
+        List<Long> uidList = IntStream.range(0, listSize).mapToObj(offset -> firstSeqUid + offset).collect(Collectors.toCollection(() -> new ArrayList<>(listSize)));
 
         return uidList;
     }

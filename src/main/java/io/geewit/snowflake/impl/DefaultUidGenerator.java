@@ -197,7 +197,7 @@ public class DefaultUidGenerator implements UidGenerator {
             try {
                 epochDate = DateUtils.parseDate(epochStr,  "yyyy-MM-dd");
                 this.epochSeconds = TimeUnit.MILLISECONDS.toSeconds(epochDate.getTime());
-            } catch (ParseException e) {
+            } catch (ParseException ignored) {
             }
         }
     }
