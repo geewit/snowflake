@@ -48,15 +48,15 @@ public class NetUtils {
     }
 
     public static long getLongMac() throws SocketException {
-        byte[] mac_bytes = getMac();
-        if(mac_bytes == null) {
+        byte[] macBytes = getMac();
+        if(macBytes == null) {
             return RandomUtils.nextLong();
         }
-        return (0xffL & (long) mac_bytes[0])
-                | (0xff00L & ((long) mac_bytes[1] << 8))
-                | (0xff0000L & ((long) mac_bytes[2] << (8 * 2)))
-                | (0xff000000L & ((long) mac_bytes[3] << (8 * 3)))
-                | (0xff00000000L & ((long) mac_bytes[4] << (8 * 4)))
-                | (0xff0000000000L & ((long) mac_bytes[5] << (8 * 5)));
+        return (0xffL & (long) macBytes[0])
+                | (0xff00L & ((long) macBytes[1] << 8))
+                | (0xff0000L & ((long) macBytes[2] << (8 * 2)))
+                | (0xff000000L & ((long) macBytes[3] << (8 * 3)))
+                | (0xff00000000L & ((long) macBytes[4] << (8 * 4)))
+                | (0xff0000000000L & ((long) macBytes[5] << (8 * 5)));
     }
 }

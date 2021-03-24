@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author geewit
  */
 public class NamingThreadFactory implements ThreadFactory {
-    private static final Logger LOGGER = LoggerFactory.getLogger(NamingThreadFactory.class);
+    private static final Logger logger = LoggerFactory.getLogger(NamingThreadFactory.class);
     /**
      * Sequences for multi thread name prefix
      */
@@ -54,7 +54,7 @@ public class NamingThreadFactory implements ThreadFactory {
         this.name = name;
         this.daemon = daemon;
         this.uncaughtExceptionHandler = handler;
-        this.sequences = new ConcurrentHashMap<String, AtomicLong>();
+        this.sequences = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -66,19 +66,15 @@ public class NamingThreadFactory implements ThreadFactory {
         // Notice that auto detect may cause some performance overhead
         String prefix = this.name;
         if (StringUtils.isBlank(prefix)) {
-            prefix = getInvoker(2);
+            prefix = this.getInvoker(2);
         }
-        thread.setName(prefix + "-" + getSequence(prefix));
+        thread.setName(prefix + "-" + this.getSequence(prefix));
 
         // no specified uncaughtExceptionHandler, just do logging.
         if (this.uncaughtExceptionHandler != null) {
             thread.setUncaughtExceptionHandler(this.uncaughtExceptionHandler);
         } else {
-            thread.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-                public void uncaughtException(Thread t, Throwable e) {
-                    LOGGER.error("unhandled exception in thread: " + t.getId() + ":" + t.getName(), e);
-                }
-            });
+            thread.setUncaughtExceptionHandler((t, e) -> logger.error("unhandled exception in thread: " + t.getId() + ":" + t.getName(), e));
         }
 
         return thread;

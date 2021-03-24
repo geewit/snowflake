@@ -1,6 +1,5 @@
 package io.geewit.snowflake.buffer;
 
-import io.geewit.snowflake.utils.PaddedAtomicLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,7 +9,7 @@ import java.util.stream.IntStream;
 /**
  * Represents a ring buffer based on array.<br>
  * Using array could improve read element performance due to the CUP cache line. To prevent
- * the side effect of False Sharing, {@link PaddedAtomicLong} is using on 'tail' and 'cursor'<p>
+ * the side effect of False Sharing, {@link AtomicLong} is using on 'tail' and 'cursor'<p>
  * <p>
  * A ring buffer is consisted of:
  * <li><b>slots:</b> each element of the array is a slot, which is be set with a UID
@@ -21,8 +20,9 @@ import java.util.stream.IntStream;
  * @author geewit
  */
 public class RingBuffer {
+    private static final Logger logger = LoggerFactory.getLogger(RingBuffer.class);
+
     public static final int DEFAULT_PADDING_PERCENT = 50;
-    private static final Logger LOGGER = LoggerFactory.getLogger(RingBuffer.class);
     /**
      * Constants
      */
@@ -35,17 +35,17 @@ public class RingBuffer {
     private final int bufferSize;
     private final long indexMask;
     private final long[] slots;
-    private final PaddedAtomicLong[] flags;
+    private final AtomicLong[] flags;
 
     /**
      * Tail: last position sequence to produce
      */
-    private final AtomicLong tail = new PaddedAtomicLong(START_POINT);
+    private final AtomicLong tail = new AtomicLong(START_POINT);
 
     /**
      * Cursor: current position sequence to consume
      */
-    private final AtomicLong cursor = new PaddedAtomicLong(START_POINT);
+    private final AtomicLong cursor = new AtomicLong(START_POINT);
 
     /**
      * Threshold for trigger padding buffer
@@ -89,7 +89,7 @@ public class RingBuffer {
         this.bufferSize = bufferSize;
         this.indexMask = bufferSize - 1;
         this.slots = new long[bufferSize];
-        this.flags = initFlags(bufferSize);
+        this.flags = this.initFlags(bufferSize);
 
         this.paddingThreshold = bufferSize * paddingFactor / 100;
     }
@@ -116,7 +116,7 @@ public class RingBuffer {
         }
 
         // 1. pre-check whether the flag is CAN_PUT_FLAG
-        int nextTailIndex = calSlotIndex(currentTail + 1);
+        int nextTailIndex = this.calSlotIndex(currentTail + 1);
         if (flags[nextTailIndex].get() != CAN_PUT_FLAG) {
             rejectedPutHandler.rejectPutBuffer(this, uid);
             return false;
@@ -155,7 +155,7 @@ public class RingBuffer {
         // trigger padding in an async-mode if reach the threshold
         long currentTail = tail.get();
         if (currentTail - nextCursor < paddingThreshold) {
-            LOGGER.info("Reach the padding threshold:{}. tail:{}, cursor:{}, rest:{}", paddingThreshold, currentTail,
+            logger.info("Reach the padding threshold:{}. tail:{}, cursor:{}, rest:{}", paddingThreshold, currentTail,
                     nextCursor, currentTail - nextCursor);
             bufferPaddingExecutor.asyncPadding();
         }
@@ -190,23 +190,22 @@ public class RingBuffer {
      * Discard policy for {@link RejectedPutBufferHandler}, we just do logging
      */
     protected void discardPutBuffer(RingBuffer ringBuffer, long uid) {
-        LOGGER.warn("Rejected putting buffer for uid:{}. {}", uid, ringBuffer);
+        logger.warn("Rejected putting buffer for uid:{}. {}", uid, ringBuffer);
     }
 
     /**
      * Policy for {@link RejectedTakeBufferHandler}, throws {@link RuntimeException} after logging
      */
     protected void exceptionRejectedTakeBuffer(RingBuffer ringBuffer) {
-        LOGGER.warn("Rejected take buffer. {}", ringBuffer);
+        logger.warn("Rejected take buffer. {}", ringBuffer);
         throw new RuntimeException("Rejected take buffer. " + ringBuffer);
     }
 
     /**
      * Initialize flags as CAN_PUT_FLAG
      */
-    private PaddedAtomicLong[] initFlags(int bufferSize) {
-
-        return IntStream.range(0, bufferSize).mapToObj(i -> new PaddedAtomicLong(CAN_PUT_FLAG)).toArray(PaddedAtomicLong[]::new);
+    private AtomicLong[] initFlags(int bufferSize) {
+        return IntStream.range(0, bufferSize).mapToObj(i -> new AtomicLong(CAN_PUT_FLAG)).toArray(AtomicLong[]::new);
     }
 
     /**

@@ -31,7 +31,8 @@ import java.util.stream.IntStream;
  * @author geewit
  */
 public class CachedUidGenerator extends DefaultUidGenerator {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CachedUidGenerator.class);
+    private static final Logger logger = LoggerFactory.getLogger(CachedUidGenerator.class);
+
     private static final int DEFAULT_BOOST_POWER = 3;
 
     /**
@@ -55,7 +56,7 @@ public class CachedUidGenerator extends DefaultUidGenerator {
         super(workerId);
         // initialize RingBuffer & RingBufferPaddingExecutor
         this.initRingBuffer();
-        LOGGER.info("Initialized RingBuffer successfully.");
+        logger.info("Initialized RingBuffer successfully.");
     }
 
     @Override
@@ -63,7 +64,7 @@ public class CachedUidGenerator extends DefaultUidGenerator {
         try {
             return ringBuffer.take();
         } catch (Exception e) {
-            LOGGER.error("Generate unique id exception. ", e);
+            logger.error("Generate unique id exception. ", e);
             throw new UidGenerateException(e);
         }
     }
@@ -100,7 +101,7 @@ public class CachedUidGenerator extends DefaultUidGenerator {
         // initialize RingBuffer
         int bufferSize = ((int) bitsAllocator.getMaxSequence() + 1) << boostPower;
         this.ringBuffer = new RingBuffer(bufferSize, paddingFactor);
-        LOGGER.info("Initialized ring buffer size:{}, paddingFactor:{}", bufferSize, paddingFactor);
+        logger.info("Initialized ring buffer size:{}, paddingFactor:{}", bufferSize, paddingFactor);
 
         // initialize RingBufferPaddingExecutor
         boolean usingSchedule = (scheduleInterval != null);
@@ -109,7 +110,7 @@ public class CachedUidGenerator extends DefaultUidGenerator {
             bufferPaddingExecutor.setScheduleInterval(scheduleInterval);
         }
 
-        LOGGER.info("Initialized BufferPaddingExecutor. Using schdule:{}, interval:{}", usingSchedule, scheduleInterval);
+        logger.info("Initialized BufferPaddingExecutor. Using schdule:{}, interval:{}", usingSchedule, scheduleInterval);
 
         // set rejected put/take handle policy
         this.ringBuffer.setBufferPaddingExecutor(bufferPaddingExecutor);

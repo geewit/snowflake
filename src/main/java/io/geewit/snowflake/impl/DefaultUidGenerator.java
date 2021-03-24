@@ -86,7 +86,7 @@ public class DefaultUidGenerator implements UidGenerator {
     @Override
     public long getUID() throws UidGenerateException {
         try {
-            return nextId();
+            return this.nextId();
         } catch (Exception e) {
             logger.error("Generate unique id exception.", e);
             throw new UidGenerateException(e);
@@ -121,7 +121,7 @@ public class DefaultUidGenerator implements UidGenerator {
      * @throws UidGenerateException in the case: Clock moved backwards; Exceeds the max timestamp
      */
     protected synchronized long nextId() {
-        long currentSecond = getCurrentSecond();
+        long currentSecond = this.getCurrentSecond();
 
         // Clock moved backwards, refuse to generate uid
         if (currentSecond < lastSecond) {
@@ -134,7 +134,7 @@ public class DefaultUidGenerator implements UidGenerator {
             sequence = (sequence + 1) & bitsAllocator.getMaxSequence();
             // Exceed the max sequence, we wait the next second to generate uid
             if (sequence == 0) {
-                currentSecond = getNextSecond(lastSecond);
+                currentSecond = this.getNextSecond(lastSecond);
             }
 
             // At the different second, sequence restart from zero
@@ -152,9 +152,9 @@ public class DefaultUidGenerator implements UidGenerator {
      * Get next millisecond
      */
     private long getNextSecond(long lastTimestamp) {
-        long timestamp = getCurrentSecond();
+        long timestamp = this.getCurrentSecond();
         while (timestamp <= lastTimestamp) {
-            timestamp = getCurrentSecond();
+            timestamp = this.getCurrentSecond();
         }
 
         return timestamp;

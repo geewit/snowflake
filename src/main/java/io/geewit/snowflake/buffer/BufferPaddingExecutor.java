@@ -1,7 +1,6 @@
 package io.geewit.snowflake.buffer;
 
 import io.geewit.snowflake.utils.NamingThreadFactory;
-import io.geewit.snowflake.utils.PaddedAtomicLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Represents an executor for padding {@link RingBuffer}<br>
@@ -36,7 +36,7 @@ public class BufferPaddingExecutor {
     /**
      * We can borrow UIDs from the future, here store the last second we have consumed
      */
-    private final PaddedAtomicLong lastSecond;
+    private final AtomicLong lastSecond;
 
     /**
      * RingBuffer & BufferUidProvider
@@ -77,7 +77,7 @@ public class BufferPaddingExecutor {
      */
     public BufferPaddingExecutor(RingBuffer ringBuffer, BufferedUidProvider uidProvider, boolean usingSchedule) {
         this.running = new AtomicBoolean(false);
-        this.lastSecond = new PaddedAtomicLong(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
+        this.lastSecond = new AtomicLong(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()));
         this.ringBuffer = ringBuffer;
         this.uidProvider = uidProvider;
 
@@ -98,7 +98,7 @@ public class BufferPaddingExecutor {
      */
     public void start() {
         if (bufferPadSchedule != null) {
-            bufferPadSchedule.scheduleWithFixedDelay(() -> paddingBuffer(), scheduleInterval, scheduleInterval, TimeUnit.SECONDS);
+            bufferPadSchedule.scheduleWithFixedDelay(this::paddingBuffer, scheduleInterval, scheduleInterval, TimeUnit.SECONDS);
         }
     }
 
