@@ -1,18 +1,19 @@
 package io.geewit.snowflake.worker;
 
-
-import io.geewit.core.utils.enums.Value;
-
 /**
  * WorkerNodeType
- * <li>CONTAINER: Such as Docker
- * <li>ACTUAL: Actual machine
  *
  * @author geewit
  */
-public enum WorkerNodeType implements Value {
-
-    CONTAINER(1), ACTUAL(2);
+public enum WorkerNodeType {
+    /**
+     * Such as Docker
+     */
+    CONTAINER(1),
+    /**
+     * Actual machine
+     */
+    ACTUAL(2);
 
     /**
      * Lock type
@@ -26,7 +27,6 @@ public enum WorkerNodeType implements Value {
         this.type = type;
     }
 
-    @Override
     public int value() {
         return type;
     }

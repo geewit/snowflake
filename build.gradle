@@ -4,8 +4,6 @@ dependencies {
     compile("org.slf4j:slf4j-api:$slf4j_version") {
         exclude group: 'org.slf4j', module: 'logback'
     }
-    compile("io.geewit.utils.core:gw-core-date-utils:$gw_core_utils_version")
-    compile("io.geewit.utils.core:gw-core-enum-utils:$gw_core_utils_version")
     compile("org.apache.commons:commons-lang3:$commons_lang3_version")
     testCompile("org.junit.jupiter:junit-jupiter-engine:$junit_version")
     testCompile("org.junit.platform:junit-platform-launcher:$junit_platform_version")
