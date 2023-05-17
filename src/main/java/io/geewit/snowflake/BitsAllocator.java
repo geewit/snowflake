@@ -29,7 +29,7 @@ public class BitsAllocator {
     /**
      * Bits for [sign-> second-> workId-> sequence]
      */
-    private int signBits = 1;
+    private final int signBits = 1;
 
     /**
      * Constructor with timestampBits, workerIdBits, sequenceBits<br>

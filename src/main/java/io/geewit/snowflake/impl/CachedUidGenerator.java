@@ -39,7 +39,7 @@ public class CachedUidGenerator extends DefaultUidGenerator {
      * Spring properties
      */
     private int boostPower = DEFAULT_BOOST_POWER;
-    private int paddingFactor = RingBuffer.DEFAULT_PADDING_PERCENT;
+    private final int paddingFactor = RingBuffer.DEFAULT_PADDING_PERCENT;
     private Long scheduleInterval;
 
     private RejectedPutBufferHandler rejectedPutBufferHandler;
@@ -89,9 +89,8 @@ public class CachedUidGenerator extends DefaultUidGenerator {
         int listSize = (int) bitsAllocator.getMaxSequence() + 1;
         // Allocate the first sequence of the second, the others can be calculated with the offset
         long firstSeqUid = bitsAllocator.allocate(currentSecond - epochSeconds, workerId, 0L);
-        List<Long> uidList = IntStream.range(0, listSize).mapToObj(offset -> firstSeqUid + offset).collect(Collectors.toCollection(() -> new ArrayList<>(listSize)));
 
-        return uidList;
+        return IntStream.range(0, listSize).mapToObj(offset -> firstSeqUid + offset).collect(Collectors.toCollection(() -> new ArrayList<>(listSize)));
     }
 
     /**
